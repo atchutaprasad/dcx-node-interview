@@ -43,6 +43,12 @@ app.get('/testapi', function(req, res){
 
  /* istanbul ignore next */
  if (!module.parent) {
-   app.listen(3001);
+  var host = '0.0.0.0';
+  var server = app.listen(process.env.PORT|| 8080,host, function(){
+      var port = server.address().port;
+      console.log('server is running ON port',port);
+  })
    console.log('Express started on port 3001');
  }
+
+ 
