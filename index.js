@@ -3,11 +3,11 @@
  */
 
  var express = require('./expressLib');
- var hash = require('pbkdf2-password')()
+ //var hash = require('pbkdf2-password')()
  var path = require('path');
- var session = require('express-session');
+ //var session = require('express-session');
  var cors = require('cors');
- var bodyParse = require('body-parser')
+ //var bodyParse = require('body-parser')
 
 
  var app = module.exports = express();
@@ -41,14 +41,12 @@ app.get('/testapi', function(req, res){
 });
 
 
- /* istanbul ignore next */
- if (!module.parent) {
   var host = '0.0.0.0';
   var server = app.listen(process.env.PORT|| 8080,host, function(){
       var port = server.address().port;
       console.log('server is running ON port',port);
   })
    console.log('Express started on port 3001');
- }
+ 
 
  
