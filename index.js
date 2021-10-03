@@ -22,126 +22,25 @@ app.use(cors());
 
 
 // parse application/json
-app.use(bodyParse.json())
+//app.use(bodyParse.json())
 
 
- // middleware
- 
- app.use(express.urlencoded({ extended: false }))
- app.use(session({
-   resave: false, // don't save session if unmodified
-   saveUninitialized: false, // don't create session until something stored
-   secret: 'shhhh, very secret'
- }));
- 
- // Session-persisted message middleware
- 
- app.use(function(req, res, next){
-   var err = req.session.error;
-   var msg = req.session.success;
-   delete req.session.error;
-   delete req.session.success;
-   res.locals.message = '';
-   if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
-   if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
-   next();
- });
- 
- // dummy database
- 
- var users = {
-   test: { name: 'test' }
- };
- 
- // when you create a user, generate a salt
- // and hash the password ('test' is the pass here)
- 
- hash({ password: 'test' }, function (err, pass, salt, hash) {
-   if (err) throw err;
-   // store the salt & hash in the "db"
-   users.test.salt = salt;
-   users.test.hash = hash;
- });
- 
- 
- // Authenticate using our plain-object database of doom!
- 
- function authenticate(name, pass, fn) {
-   if (!module.parent) console.log('authenticating %s:%s', name, pass);
-   var user = users[name];
-   console.log(user)
-   // query the db for the given username
-   if (!user) return fn(new Error('cannot find user'));
-   // apply the same algorithm to the POSTed password, applying
-   // the hash against the pass / salt, if there is a match we
-   // found the user
-   hash({ password: pass, salt: user.salt }, function (err, pass, salt, hash) {
-     if (err) {return fn(err);}
-     if (hash === user.hash) {return fn(null, user)}
-     fn(new Error('invalid password'));
-   });
- }
- 
- function restrict(req, res, next) {
-   if (req.session.user) {
-     next();
-   } else {
-     req.session.error = 'Access denied!';
-     //res.redirect('/login');
-     //res.send(req.session)
-     res.send('success')
-   }
- }
- 
- app.get('/', function(req, res){
-   res.redirect('/login');
- });
- 
- app.get('/verifyLoginSession', restrict, function(req, res){
-   res.send('Wahoo! restricted area, click to <a href="/logout">logout</a>');
- });
- 
- app.get('/logout', function(req, res){
-   // destroy the user's session to log them out
-   // will be re-created next request
-   req.session.destroy(function(){
-     //res.redirect('/');
+app.post('/parse', function (req, res) {
+  var from = req.body.from;
+  var text = req.body.text;
+  var subject = req.body.subject;
+  var num_attachments = req.body.attachments;
+  for (i = 1; i <= num_attachments; i++){
+    var attachment = req.files['attachment' + i];
+    // attachment will be a File object
+  }
+});
 
-     res.send(req.session)
-   });
- });
- 
- app.get('/login', function(req, res){
-   // res.render('login');
-   res.send('login failed');
- });
- 
- app.post('/login', function(req, res){
-   authenticate(req.body.username, req.body.password, function(err, user){
+app.get('/testapi', function(req, res){
+    res.send('200 response - working fine');
+});
 
-     if (user) {
-       // Regenerate session when signing in
-       // to prevent fixation
-       req.session.regenerate(function(){
-         // Store the user's primary key
-         // in the session store to be retrieved,
-         // or in this case the entire user object
-         req.session.user = user;
-         req.session.success = 'Authenticated as ' + user.name
-           + ' click to <a href="/logout">logout</a>. ';
-           req.session.token = "testToken"
-        // res.redirect('back');
-         res.send(req.session);
-       });
-     } else {
-       req.session.error = 'Authentication failed, please check your '
-         + ' username and password.';
-       //res.redirect('/login');
-       res.send(req.session);
-     }
-   });
- });
- 
+
  /* istanbul ignore next */
  if (!module.parent) {
    app.listen(3001);
