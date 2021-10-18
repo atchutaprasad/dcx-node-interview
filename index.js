@@ -20,9 +20,19 @@
 // Allow all
 app.use(cors());
 
+const Binance = require('node-binance-api');
+const binance = new Binance().options({
+  APIKEY: 'CjZWpgiO7sAceU9ZWc3xk2m0ao4upx5bwkrgA0KE6U8bB6bxHI1cGss6ZMZWUdND',
+  APISECRET: '5Pzy5jBFju3QtZKo58R2kPqS4iO2CnEihI7GOQvJBz6w9Ik4qGOJaQu9IJ3gKNKD'
+});
+
 
 // parse application/json
 //app.use(bodyParse.json())
+app.post('/', function(req, res){
+  const x = await binance.futuresPrices();
+  console.log(x);
+});
 
 
 app.post('/parse', function (req, res) {
