@@ -79,10 +79,17 @@ app.post('/parse', function (req, res) {
 
 app.get('/testapi', function(req, res){
 
-    console.log(req.body);
-    const result = await binance.futuresBalance();
+    //console.log(req.body);
+    //const result = await binance.futuresBalance();
     console.log(result);
     res.send('200 response - working fine');
+});
+app.get('/testapi2', function(req, res){
+
+  //console.log(req.body);
+  const result = await binance.futuresBalance();
+  console.log(result);
+  res.send('200 response - working fine');
 });
 
 
