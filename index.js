@@ -28,6 +28,7 @@ const binance = new Binance().options({
 
 
 const start = async function() {
+  return true;
   /*await binance.futuresLeverage( 'ADAUSDT', 10 );
   await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
   
@@ -37,7 +38,7 @@ const start = async function() {
  // const result =  await binance.futuresMarketSell( 'ADAUSDT', 5 );
  //const result = await binance.futuresOpenOrders();
 
- let position_data = await binance.futuresPositionRisk(), markets = Object.keys( position_data );
+ /*let position_data = await binance.futuresPositionRisk(), markets = Object.keys( position_data );
 for ( let market of markets ) {
   let obj = position_data[market], size = Number( obj.positionAmt );
   if ( size == 0 ) continue;
@@ -45,7 +46,7 @@ for ( let market of markets ) {
   let leverage = 5
   console.info( `${obj.leverage}x\t${market}\t${obj.unRealizedProfit}` );
   //console.info( obj ); //positionAmt entryPrice markPrice unRealizedProfit liquidationPrice leverage marginType isolatedMargin isAutoAddMargin maxNotionalValue
-}
+}*/
 
   //const result = await binance.futuresBalance();
   /*binance.balance((error, balances) => {
@@ -60,7 +61,7 @@ for ( let market of markets ) {
 //app.use(bodyParse.json())
 app.get('/', function(req, res){
   console.log('loaded from get')
-  //start();
+  start();
   res.send('abc');
   //console.log(x);
 });
@@ -88,13 +89,14 @@ app.get('/testapi2', function(req, res){
 
   //console.log(req.body);
   const result = await binance.futuresBalance();
+  start();
   console.log(result);
   res.send('200 response - working fine');
 });
 
 
   var host = '0.0.0.0';
-  var server = app.listen(process.env.PORT|| 8080,host, function(){
+  var server = app.listen(process.env.PORT || 8080,host, function(){
       var port = server.address().port;
       console.log('server is running ON port',port);
   })
