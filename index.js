@@ -87,7 +87,7 @@ app.get('/testapi', function(req, res){
    // console.log(result);
     res.send('200 response - working fine');
 });
-app.get('/testapi2', function(req, res){
+app.post('/testapi2', function(req, res){
 
   //console.log(req.body);
   
