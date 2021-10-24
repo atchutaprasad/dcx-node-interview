@@ -28,7 +28,9 @@ const binance = new Binance().options({
 
 
 const start = async function() {
-  return true;
+  const result = await binance.futuresBalance();
+  console.log(result);
+  //return true;
   /*await binance.futuresLeverage( 'ADAUSDT', 10 );
   await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
   
@@ -61,7 +63,7 @@ for ( let market of markets ) {
 //app.use(bodyParse.json())
 app.get('/', function(req, res){
   console.log('loaded from get')
-  start();
+  //start();
   res.send('abc');
   //console.log(x);
 });
@@ -88,9 +90,9 @@ app.get('/testapi', function(req, res){
 app.get('/testapi2', function(req, res){
 
   //console.log(req.body);
-  const result = await binance.futuresBalance();
+  
   start();
-  console.log(result);
+  //console.log(result);
   res.send('200 response - working fine');
 });
 
