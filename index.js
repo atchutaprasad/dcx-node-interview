@@ -27,11 +27,42 @@ const binance = new Binance().options({
 });
 
 
+const start = async function() {
+  /*await binance.futuresLeverage( 'ADAUSDT', 10 );
+  await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
+  
+  await binance.futuresPositionMargin( "ADAUSDT", 5, 1 )
+  const result =  await binance.futuresMarketBuy( 'ADAUSDT', 5, {newOrderRespType: 'RESULT'} )
+  */
+ // const result =  await binance.futuresMarketSell( 'ADAUSDT', 5 );
+ //const result = await binance.futuresOpenOrders();
+
+ let position_data = await binance.futuresPositionRisk(), markets = Object.keys( position_data );
+for ( let market of markets ) {
+  let obj = position_data[market], size = Number( obj.positionAmt );
+  if ( size == 0 ) continue;
+  console.log(obj);
+  let leverage = 5
+  console.info( `${obj.leverage}x\t${market}\t${obj.unRealizedProfit}` );
+  //console.info( obj ); //positionAmt entryPrice markPrice unRealizedProfit liquidationPrice leverage marginType isolatedMargin isAutoAddMargin maxNotionalValue
+}
+
+  //const result = await binance.futuresBalance();
+  /*binance.balance((error, balances) => {
+    if ( error ) return console.error(error);
+    console.info("balances()", balances.SHIB);
+    console.info("ETH balance: ", balances.ETH.available);
+  });*/
+  // console.log(result);
+}
+
 // parse application/json
 //app.use(bodyParse.json())
-app.post('/', function(req, res){
-  const x = await binance.futuresPrices();
-  console.log(x);
+app.get('/', function(req, res){
+  console.log('loaded from get')
+  //start();
+  res.send('abc');
+  //console.log(x);
 });
 
 
@@ -47,6 +78,10 @@ app.post('/parse', function (req, res) {
 });
 
 app.get('/testapi', function(req, res){
+
+    console.log(req.body);
+    const result = await binance.futuresBalance();
+    console.log(result);
     res.send('200 response - working fine');
 });
 
