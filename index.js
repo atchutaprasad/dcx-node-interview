@@ -25,7 +25,23 @@ const binance = new Binance().options({
   APIKEY: 'CjZWpgiO7sAceU9ZWc3xk2m0ao4upx5bwkrgA0KE6U8bB6bxHI1cGss6ZMZWUdND',
   APISECRET: '5Pzy5jBFju3QtZKo58R2kPqS4iO2CnEihI7GOQvJBz6w9Ik4qGOJaQu9IJ3gKNKD'
 });
+
+
 const sell = async function() {
+  await binance.futuresLeverage( 'ADAUSDT', 10 );
+  await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
+  
+  await binance.futuresPositionMargin( "ADAUSDT", 5, 1 )
+  const result =  await binance.futuresMarketSell( 'ADAUSDT', 5, {newOrderRespType: 'RESULT'} )
+  console.log(result);
+}
+
+const sellToClose = async function() {
+  const result =  await binance.futuresMarketBuy( 'ADAUSDT', 5 );
+  console.log(result)
+}
+
+const buyToClose = async function() {
   const result =  await binance.futuresMarketSell( 'ADAUSDT', 5 );
   console.log(result)
 }
@@ -67,6 +83,40 @@ for ( let market of markets ) {
   // console.log(result);
 }
 
+app.post('/buy', function(req, res){
+  console.log('buy start')
+  console.log(req.body);
+  
+  buy();
+  console.log('buy complete');
+});
+
+app.post('/buyclose', function(req, res){
+  console.log('buyclose start')
+  console.log(req.body);
+  
+  buyToClose();
+  console.log('buyclose complete');
+});
+app.post('/sell', function(req, res){
+  console.log('sell start');
+  console.log(req.body);
+  
+  sell();
+  console.log('sell complete');
+  //console.log(result);
+  //res.send('200 response - working fine');
+});
+app.post('/sellclose', function(req, res){
+  console.log('sellclose start');
+  console.log(req.body);
+  
+  sellToClose();
+  console.log('sellclose complete');
+  //console.log(result);
+  //res.send('200 response - working fine');
+});
+
 // parse application/json
 //app.use(bodyParse.json())
 app.get('/', function(req, res){
@@ -95,25 +145,7 @@ app.get('/testapi', function(req, res){
    // console.log(result);
     res.send('200 response - working fine');
 });
-app.post('/buy', function(req, res){
-  console.log('buy start')
-  console.log(req.body);
-  
-  buy();
-  console.log('buy complete');
-  //console.log(result);
-  //res.send('200 response - working fine');
-});
 
-app.post('/sell', function(req, res){
-  console.log('sell start');
-  console.log(req.body);
-  
-  sell();
-  console.log('sell complete');
-  //console.log(result);
-  //res.send('200 response - working fine');
-});
 
 
   var host = '0.0.0.0';
