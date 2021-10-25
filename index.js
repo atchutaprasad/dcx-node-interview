@@ -25,11 +25,19 @@ const binance = new Binance().options({
   APIKEY: 'CjZWpgiO7sAceU9ZWc3xk2m0ao4upx5bwkrgA0KE6U8bB6bxHI1cGss6ZMZWUdND',
   APISECRET: '5Pzy5jBFju3QtZKo58R2kPqS4iO2CnEihI7GOQvJBz6w9Ik4qGOJaQu9IJ3gKNKD'
 });
+const sell = async function() {
+  const result =  await binance.futuresMarketSell( 'ADAUSDT', 5 );
+  console.log(result)
+}
 
-
-const start = async function() {
-  const result = await binance.futuresBalance();
+const buy = async function() {
+  await binance.futuresLeverage( 'ADAUSDT', 10 );
+  await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
+  
+  await binance.futuresPositionMargin( "ADAUSDT", 5, 1 )
+  const result =  await binance.futuresMarketBuy( 'ADAUSDT', 5, {newOrderRespType: 'RESULT'} )
   console.log(result);
+
   //return true;
   /*await binance.futuresLeverage( 'ADAUSDT', 10 );
   await binance.futuresMarginType( 'ADAUSDT', 'CROSSED' );
@@ -87,13 +95,24 @@ app.get('/testapi', function(req, res){
    // console.log(result);
     res.send('200 response - working fine');
 });
-app.post('/testapi2', function(req, res){
-
-  //console.log(req.body);
+app.post('/buy', function(req, res){
+  console.log('buy start')
+  console.log(req.body);
   
-  start();
+  buy();
+  console.log('buy complete');
   //console.log(result);
-  res.send('200 response - working fine');
+  //res.send('200 response - working fine');
+});
+
+app.post('/sell', function(req, res){
+  console.log('sell start');
+  console.log(req.body);
+  
+  sell();
+  console.log('sell complete');
+  //console.log(result);
+  //res.send('200 response - working fine');
 });
 
 
